@@ -8,7 +8,7 @@ services:
     image: nucypher:latest
     container_name: nucypher-alice
     ports:
-      - "9151:9151"
+      - "8151:8151"
     build:
       context: "$NUCYPHER_HOME"
       dockerfile: "$NUCYPHER_HOME/deploy/docker/Dockerfile"
@@ -23,6 +23,8 @@ services:
       - NUCYPHER_SENTRY_LOGS=0
     image: nucypher:latest
     container_name: nucypher-bob
+    ports:
+      - "11151:11151"
     build:
       context: "${NUCYPHER_HOME}"
       dockerfile: $NUCYPHER_HOME/deploy/docker/Dockerfile
@@ -39,6 +41,8 @@ services:
       - nucypher-alice
     image: nucypher:latest
     container_name: nucypher-enrico
+    ports:
+      - "5151:5151"
     build:
       context: "${NUCYPHER_HOME}"
       dockerfile: $NUCYPHER_HOME/deploy/docker/Dockerfile
