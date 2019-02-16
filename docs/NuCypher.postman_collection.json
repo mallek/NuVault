@@ -1,0 +1,129 @@
+{
+	"info": {
+		"_postman_id": "fbb70e57-44ec-4269-afe7-af4b9b6c58ee",
+		"name": "NuCypher",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8151/derive_policy_pubkey",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"label\":\"RXRoZGVudmVyMjAxOQ==\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8151/derive_policy_pubkey",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8151",
+					"path": [
+						"derive_policy_pubkey"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5151/encrypt_message",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"message\":\"dGhlIHF1aWNrIGJyb3duIGZveCBqdW1wZWQgb3ZlciB0aGUgbGF6eSBkb2c=\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5151/encrypt_message",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5151",
+					"path": [
+						"encrypt_message"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:11151/retrieve",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"label\": \"RXRoZGVudmVyMjAxOQ==\",\n\t\"policy_encrypting_pubkey\": \"035764934b643f0655815da52a116c1ac218938a4a87474d4c31c53836fbba1319\",\n  \"alice_signing_pubkey\": \"02b6dee13cca8f8edd0e17208459ee09832e6c445fadbe2ff362c6df6559e3c1cd\",\n  \"datasource_signing_pubkey\": \"bo6EXtSMoFsNFGhknK+K70vGvKyFPMYt/QM/7uM2H7jDm3xPedgWjGOXqA3rJ5AVr8G8Pj8X/LXyWFKKOMLMjA==\",\n  \"message_kit\": \"A0Wp7oWebbXrAHjzGckAF/tB07gXbvDZVgcmPLo1M2exAtpwq77Sev5w7etsQchilPfp9B2vlU5bU26kQtzVCZnTj9VRhzccJDtta2fTo+dWDQgTKvpeA6vyKhRFE8XuKj0CxnoxnXQbc5Ncv7U0YzTIbTe5NaxEQ4QFu//EtiBw+JVqvs93C/Vu4q9isX74GwLr+tvS2qNumycsVDtiRG9pt+jz2Rml3oCIWWc8zKU0KUDN+NFjLB5WFs5MP4qY12KMXnKaR5kRjzWsa+iFPR38kCCGGOJSi2hla5sxpKC5dvHQ1bP1UBGbxaD8j1a7zJudDSZ50a5t1KbZKZGBF+zq+WyMAob5Je8qp9uPbgzE5G0=\"\n\t\n}"
+				},
+				"url": {
+					"raw": "http://localhost:11151/retrieve",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "11151",
+					"path": [
+						"retrieve"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8151/grant",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"bob_signing_key\": \"03f75f4d94290143c6dd25b5035cf406f75bdf07c769c8da0317342e79398e60ef\",\n    \"bob_encrypting_key\": \"0330ca8a90393f59c90b779990db198161b1f7e9633b9c04eaa7097259c80edfc0\",\n    \"m\": 1,\n    \"n\": 1,\n    \"label\": \"RXRoZGVudmVyMjAxOQ==\",\n    \"expiration_time\": \"2019-02-19T12:56:26.976816\"\n}\n\n"
+				},
+				"url": {
+					"raw": "http://localhost:8151/grant",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8151",
+					"path": [
+						"grant"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
