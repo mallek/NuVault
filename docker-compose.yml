@@ -2,14 +2,16 @@ version: '3'
 
 services:
   nucypher-alice:
-    command: /usr/local/bin/nucypher alice run --dev --network eth_denver --teacher-uri 18.217.28.35.9151
+    command: /usr/local/bin/nucypher alice run --dev --network eth_denver --teacher-uri 18.217.28.35:9151
+    environment: 
+      - NUCYPHER_SENTRY_LOGS=0
     image: nucypher:latest
     container_name: nucypher-alice
     ports:
       - "9151:9151"
     build:
-      context: "${NUCYPHER_HOME}"
-      dockerfile: $NUCYPHER_HOME/deploy/docker/Dockerfile
+      context: "$NUCYPHER_HOME"
+      dockerfile: "$NUCYPHER_HOME/deploy/docker/Dockerfile"
     volumes:
       - ~/.local/share/nucypher:/nucypher
     stdin_open: true
@@ -17,6 +19,8 @@ services:
 
   nucypher-bob:
     command: nucypher bob run --dev --network eth_denver --teacher-uri 18.217.28.35:9151
+    environment: 
+      - NUCYPHER_SENTRY_LOGS=0
     image: nucypher:latest
     container_name: nucypher-bob
     build:
@@ -28,7 +32,11 @@ services:
     tty: true
 
   nucypher-enrico:
-    command: nucypher enrico run --policy-encrypting-key 035764934b643f0655815da52a116c1ac218938a4a87474d4c31c53836fbba1319
+    command: '/usr/local/bin/get-alices-key'
+    environment:
+      - NUCYPHER_SENTRY_LOGS=0
+    depends_on:
+      - nucypher-alice
     image: nucypher:latest
     container_name: nucypher-enrico
     build:
