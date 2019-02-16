@@ -79,7 +79,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"label\": \"RXRoZGVudmVyMjAxOQ==\",\n\t\"policy_encrypting_pubkey\": \"035764934b643f0655815da52a116c1ac218938a4a87474d4c31c53836fbba1319\",\n  \"alice_signing_pubkey\": \"02b6dee13cca8f8edd0e17208459ee09832e6c445fadbe2ff362c6df6559e3c1cd\",\n  \"datasource_signing_pubkey\": \"bo6EXtSMoFsNFGhknK+K70vGvKyFPMYt/QM/7uM2H7jDm3xPedgWjGOXqA3rJ5AVr8G8Pj8X/LXyWFKKOMLMjA==\",\n  \"message_kit\": \"A0Wp7oWebbXrAHjzGckAF/tB07gXbvDZVgcmPLo1M2exAtpwq77Sev5w7etsQchilPfp9B2vlU5bU26kQtzVCZnTj9VRhzccJDtta2fTo+dWDQgTKvpeA6vyKhRFE8XuKj0CxnoxnXQbc5Ncv7U0YzTIbTe5NaxEQ4QFu//EtiBw+JVqvs93C/Vu4q9isX74GwLr+tvS2qNumycsVDtiRG9pt+jz2Rml3oCIWWc8zKU0KUDN+NFjLB5WFs5MP4qY12KMXnKaR5kRjzWsa+iFPR38kCCGGOJSi2hla5sxpKC5dvHQ1bP1UBGbxaD8j1a7zJudDSZ50a5t1KbZKZGBF+zq+WyMAob5Je8qp9uPbgzE5G0=\"\n\t\n}"
+					"raw": "{\n\t\"label\": \"RXRoZGVudmVyMjAxOQ==\",\n\t\"policy_encrypting_pubkey\": \"03ccd46f3864a66f430b3d3c7f72f31bd6c755236395fcdd4896c7664c1b602e06\",\n  \"alice_signing_pubkey\": \"03c9243db3641c85d293b8a141dfaaddb597a851c4e68b2f36539ec416d5774ae8\",\n  \"datasource_signing_pubkey\": \"DN/io+mSnt0LSz5Ht6hXH0SkWfNH5SlZnd0OQ4Q4/P9x4Nk8omR6ExyvKuYphHUy23RtZAwJM50rrjByFo1zcA==\",\n  \"message_kit\": \"A2pjbLq536lVwnZlbxztzVO1wkV+X4R3/FHzJjvi8LDEA7OmlMDR9kNTUHSubEmMi2+gBE1DI7snxEFqBHjr8TNotTPnrXeFuSFTUlbYK2QiL4pS6R9YI4vwMj/x+BbnNEACXXmRZTiWOBUtAOei693vR2MdUPnGIp7V6BDBrWbw7nJuVMtuWwB+nHQ1wkhMX33f90V+SlDZYltjRyUSj3gFfpxFxI0WOWMK3FfhZ5Z3d03mcEbiZwWpDwf0XI5dlnWApQC6WlbNNp//B4cGOno6++yDA1ZZw5/PbDYeJ7Sz50RLPhqTpT3qub3kib4+r5NOWX/yv0YhmGRj/sNcInsmVZTpyOjHVVWi3EblEJFdS2k=\"\n\t\n}"
 				},
 				"url": {
 					"raw": "http://localhost:11151/retrieve",
@@ -109,7 +109,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"bob_signing_key\": \"03f75f4d94290143c6dd25b5035cf406f75bdf07c769c8da0317342e79398e60ef\",\n    \"bob_encrypting_key\": \"0330ca8a90393f59c90b779990db198161b1f7e9633b9c04eaa7097259c80edfc0\",\n    \"m\": 1,\n    \"n\": 1,\n    \"label\": \"RXRoZGVudmVyMjAxOQ==\",\n    \"expiration_time\": \"2019-02-19T12:56:26.976816\"\n}\n\n"
+					"raw": "{\n\t\"bob_signing_key\": \"02a85ab0f42937f78e2eedbc900da352753893301017eaf00432fbe064b8e6b417\",\n    \"bob_encrypting_key\": \"033b55b5f0059ee065a2fe2542863016db3f236c1c7cad88193b41c9c5f1eff355\",\n    \"m\": 1,\n    \"n\": 1,\n    \"label\": \"RXRoZGVudmVyMjAxOQ==\",\n    \"expiration_time\": \"2019-02-19T12:56:26.976816\"\n}\n\n"
 				},
 				"url": {
 					"raw": "http://localhost:8151/grant",
