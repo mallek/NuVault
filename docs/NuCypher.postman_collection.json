@@ -96,67 +96,7 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:11151/retrieve",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"label\": \"RXRoZGVudmVyMjAxOQ==\",\n\t\"policy_encrypting_pubkey\": \"03ccd46f3864a66f430b3d3c7f72f31bd6c755236395fcdd4896c7664c1b602e06\",\n  \"alice_signing_pubkey\": \"03c9243db3641c85d293b8a141dfaaddb597a851c4e68b2f36539ec416d5774ae8\",\n  \"datasource_signing_pubkey\": \"DN/io+mSnt0LSz5Ht6hXH0SkWfNH5SlZnd0OQ4Q4/P9x4Nk8omR6ExyvKuYphHUy23RtZAwJM50rrjByFo1zcA==\",\n  \"message_kit\": \"A2pjbLq536lVwnZlbxztzVO1wkV+X4R3/FHzJjvi8LDEA7OmlMDR9kNTUHSubEmMi2+gBE1DI7snxEFqBHjr8TNotTPnrXeFuSFTUlbYK2QiL4pS6R9YI4vwMj/x+BbnNEACXXmRZTiWOBUtAOei693vR2MdUPnGIp7V6BDBrWbw7nJuVMtuWwB+nHQ1wkhMX33f90V+SlDZYltjRyUSj3gFfpxFxI0WOWMK3FfhZ5Z3d03mcEbiZwWpDwf0XI5dlnWApQC6WlbNNp//B4cGOno6++yDA1ZZw5/PbDYeJ7Sz50RLPhqTpT3qub3kib4+r5NOWX/yv0YhmGRj/sNcInsmVZTpyOjHVVWi3EblEJFdS2k=\"\n\t\n}"
-				},
-				"url": {
-					"raw": "http://localhost:11151/retrieve",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "11151",
-					"path": [
-						"retrieve"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "http://localhost:8151/grant",
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"bob_signing_key\": \"{{bob_signing_key}}\",\n    \"bob_encrypting_key\": \"{{bob_encrypting_key}}\",\n    \"m\": 1,\n    \"n\": 1,\n    \"label\": \"{{label}}\",\n    \"expiration_time\": \"2019-02-19T12:56:26.976816\"\n}"
-				},
-				"url": {
-					"raw": "http://localhost:8151/grant",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8151",
-					"path": [
-						"grant"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "http://localhost:8151/grant Copy",
+			"name": "http://localhost:8151/public_keys",
 			"event": [
 				{
 					"listen": "test",
@@ -198,6 +138,82 @@
 					"port": "11151",
 					"path": [
 						"public_keys"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8151/grant",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d5a7dcd3-7eba-4b50-acba-fb106af01426",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"console.log(jsonData.result);",
+							"postman.setEnvironmentVariable(\"alice_treasure_map\", jsonData.result.treasure_map);",
+							"postman.setEnvironmentVariable(\"alice_policy_encrypting_key\", jsonData.result.policy_encrypting_key)",
+							"postman.setEnvironmentVariable(\"alice_signing_key\", jsonData.result.alice_signing_key)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"bob_signing_key\": \"{{bob_signing_key}}\",\n    \"bob_encrypting_key\": \"{{bob_encrypting_key}}\",\n    \"m\": 1,\n    \"n\": 1,\n    \"label\": \"{{label}}\",\n    \"expiration_time\": \"2019-02-19T12:56:26.976816\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8151/grant",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8151",
+					"path": [
+						"grant"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:11151/retrieve",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"label\": \"RVRIREVOVkVS\",\n\t\"policy_encrypting_pubkey\": \"{{alice_policy_encrypting_key}}\",\n\t\"alice_signing_pubkey\": \"{{alice_signing_key}}\",\n\t\"datasource_signing_pubkey\": \"{{enrico_signature}}\",\n\t\"message_kit\": \"{{enrico_message_kit}}\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:11151/retrieve",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "11151",
+					"path": [
+						"retrieve"
 					]
 				}
 			},
