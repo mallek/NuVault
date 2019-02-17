@@ -56,7 +56,7 @@
 
     <v-content>
       <v-container fluid>
-        <router-view v-on:data-changed="syncIpfs" :vault="selectedVault"></router-view>
+        <router-view v-on:vault-item-changed="syncIpfs" :vault="selectedVault"></router-view>
       </v-container>
     </v-content>
   </v-app>
@@ -116,11 +116,13 @@ export default {
         if (err) {
           console.error(err)
         } else {
-          this.hash = ipfsHash[0].hash
           this.addingVault = false
           this.newVault = null
 
-          await this.nuVaultContract.methods.saveHash(ipfsHash[0].hash).send({ from: this.account })
+          if (this.hash !== ipfsHash[0].hash) {
+            this.hash = ipfsHash[0].hash
+            await this.nuVaultContract.methods.saveHash(ipfsHash[0].hash).send({ from: this.account })
+          }
         }
       })
     },
@@ -129,8 +131,6 @@ export default {
         name: this.newVault,
         items: []
       })
-
-      this.syncIpfs()
     }
   },
   async mounted () {

@@ -67,7 +67,7 @@ export default {
       this.addingItem = false
       this.newItem = null
 
-      this.$emit('data-changed')
+      this.$emit('vault-changed')
     }
   }
 }

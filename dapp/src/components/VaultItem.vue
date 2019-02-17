@@ -83,7 +83,7 @@ export default {
 
       this.editing = false
 
-      this.$emit('data-changed')
+      this.$emit('vault-item-changed')
     }
   }
 }

@@ -2,13 +2,13 @@
   <v-container>
     <v-layout row>
       <v-flex xs4>
-        <Vault v-if="vault" :vault="vault" v-on:item-selected="selectItem" v-on:data-changed="dataChanged"></Vault>
+        <Vault v-if="vault" :vault="vault" v-on:item-selected="selectItem" v-on:vault-changed="vaultChanged"></Vault>
       </v-flex>
       <v-flex xs1>
         <v-spacer></v-spacer>
       </v-flex>
       <v-flex xs6>
-        <VaultItem v-if="vaultItem" :item="vaultItem" :vault="vault" v-on:data-changed="dataChanged"></VaultItem>
+        <VaultItem v-if="vaultItem" :item="vaultItem" :vault="vault" v-on:vault-item-changed="vaultItemChanged"></VaultItem>
       </v-flex>
     </v-layout>
   </v-container>
@@ -33,8 +33,11 @@ export default {
     selectItem (item) {
       this.vaultItem = item
     },
-    dataChanged () {
-      this.$emit('data-changed')
+    vaultChanged () {
+      this.$emit('vault-changed')
+    },
+    vaultItemChanged () {
+      this.$emit('vault-item-changed')
     }
   }
 }
