@@ -1,19 +1,20 @@
 <template>
   <v-app>
-    <v-toolbar color="#25193E" dark app flat clipped-left>
+    <v-toolbar color="#25193E" extension-height="7" dark app flat clipped-left>
       <v-toolbar-side-icon></v-toolbar-side-icon>
       <v-toolbar-title>NuVault</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
-      <v-toolbar-items class="hidden-sm-and-down">
+      <!-- <v-toolbar-items class="hidden-sm-and-down"> -->
         <v-btn flat>
           <v-avatar>
             <v-icon>account_circle</v-icon>
           </v-avatar>
           {{this.account}}
         </v-btn>
-      </v-toolbar-items>
+      <!-- </v-toolbar-items> -->
+      <v-progress-linear :active="isLoading" slot="extension" :indeterminate="true" class="ma-0"></v-progress-linear>
     </v-toolbar>
 
     <v-alert class="locked-alert" :value="typeof this.account == 'undefined'" type="error" transition="scale-transition">
@@ -102,6 +103,7 @@ export default {
   name: 'App',
   data () {
     return {
+      isLoading: false,
       web3js: null,
       account: null,
       network: null,
@@ -119,6 +121,7 @@ export default {
       this.selectedVault = vault
     },
     syncIpfs () {
+      this.isLoading = true
       const data = Buffer.from(JSON.stringify(this.vaults))
       this.ipfs.add(data, {}, async (err, ipfsHash) => {
         if (err) {
@@ -130,6 +133,7 @@ export default {
           if (this.hash !== ipfsHash[0].hash) {
             this.hash = ipfsHash[0].hash
             await this.nuVaultContract.methods.saveHash(ipfsHash[0].hash).send({ from: this.account })
+            this.isLoading = false
           }
         }
       })
