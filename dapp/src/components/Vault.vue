@@ -2,17 +2,25 @@
   <v-layout row>
     <v-flex xs12>
         <v-list subheader two-line >
-
-          <v-list-tile>
-            <v-flex sm12>
-              <v-list-tile-content>
-                <v-text-field v-model="newItem" v-if="addingItem" placeholder="New Item" @keyup.enter="addItem" @keyup.escape="addingItem = false"></v-text-field>
-              </v-list-tile-content>
-            </v-flex>
+          <v-list-tile v-if="!addingItem">
+            <v-list-tile-action>
+              <v-icon>lock</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-title>Treasure</v-list-tile-title>
             <v-list-tile-action>
               <v-icon @click="addingItem = true">add</v-icon>
             </v-list-tile-action>
           </v-list-tile>
+
+          <v-list-tile v-else>
+            <v-flex sm12>
+              <v-list-tile-content>
+                <v-text-field v-model="newItem" placeholder="New Item" @keyup.enter="addItem" @keyup.escape="addingItem = false"></v-text-field>
+              </v-list-tile-content>
+            </v-flex>
+          </v-list-tile>
+
+          <v-divider></v-divider>
 
           <template v-for="(vaultItem, index) in vault.items">
 

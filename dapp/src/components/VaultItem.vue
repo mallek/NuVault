@@ -8,6 +8,7 @@
               <v-subheader>
                 Vault: {{vault.name}}
               </v-subheader>
+              <v-divider></v-divider>
             </v-flex>
             <v-list-tile-action>
               <v-icon @click="editing = true">edit</v-icon>
@@ -39,6 +40,7 @@
               <v-subheader>
                 Vault: {{vault.name}}
               </v-subheader>
+              <v-divider></v-divider>
             </v-flex>
             <v-list-tile-action>
               <v-icon @click="addingField = true">add</v-icon>
