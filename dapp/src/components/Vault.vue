@@ -62,7 +62,7 @@ export default {
     addItem () {
       this.vault.items.push({
         name: this.newItem,
-        fields: []
+        fields: {}
       })
       this.addingItem = false
       this.newItem = null

@@ -66,12 +66,30 @@
 import Web3 from 'Web3'
 
 const IPFS = require('ipfs-api')
+const nuVault = require('../../build/contracts/NuVault')
+const wait = (condition, delay = 100, timeout = 5000, elapsed = 0) => {
+  return new Promise((resolve, reject) => {
+    const loop = () => {
+      setTimeout(() => {
+        if (condition() === true) {
+          return resolve()
+        } else if (elapsed >= timeout) {
+          return reject(new Error(`Timeout after ${timeout} ms.`))
+        } else {
+          loop()
+        }
+      }, delay)
+    }
+    loop()
+  })
+}
 
 // #fc5090 light pink
 // #fb2a78 dark pink
 // #120724 white
 // #25193E purple
 // ipfs hash QmXLrUrmmpZPbRcdVYxpw94LCpTKqJ7Bg8tnd2L26pqY7e
+
 export default {
   name: 'App',
   data () {
@@ -82,8 +100,9 @@ export default {
       selectedVault: null,
       addingVault: false,
       newVault: null,
+      nuVaultContract: null,
       ipfs: new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }),
-      hash: 'QmbFrviWQMjnJBdMtMr7FrdkBqHdoUzi6RQYcLS2R8ws6Q',
+      hash: null,
       vaults: []
     }
   },
@@ -93,21 +112,22 @@ export default {
     },
     syncIpfs () {
       const data = Buffer.from(JSON.stringify(this.vaults))
-      this.ipfs.add(data, {}, (err, ipfsHash) => {
+      this.ipfs.add(data, {}, async (err, ipfsHash) => {
         if (err) {
           console.error(err)
         } else {
-          console.log('ipfsHash', ipfsHash)
           this.hash = ipfsHash[0].hash
           this.addingVault = false
           this.newVault = null
+
+          await this.nuVaultContract.methods.saveHash(ipfsHash[0].hash).send({ from: this.account })
         }
       })
     },
     addVault () {
       this.vaults.push({
         name: this.newVault,
-        fields: []
+        items: []
       })
 
       this.syncIpfs()
@@ -155,17 +175,20 @@ export default {
         console.info('This is an unknown network.')
     }
 
-    this.ipfs.get(this.hash, (err, files) => {
-      if (err) {
-        console.error(err)
-      } else {
-        // files.forEach((file) => {
-        //   console.log(file.path)
-        //   console.log(file.content.toString('utf8'))
-        // })
-        this.vaults = JSON.parse(files[0].content)
-      }
-    })
+    this.nuVaultContract = new this.web3js.eth.Contract(nuVault.abi, nuVault.networks['133337'].address)
+
+    await wait(() => this.account !== null)
+    this.hash = await this.nuVaultContract.methods.getHash().call({ from: this.account })
+
+    if (this.hash) {
+      this.ipfs.get(this.hash, (err, files) => {
+        if (err) {
+          console.error(err)
+        } else {
+          this.vaults = JSON.parse(files[0].content)
+        }
+      })
+    }
   }
 }
 </script>
