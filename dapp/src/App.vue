@@ -9,7 +9,7 @@
       <!-- <v-toolbar-items class="hidden-sm-and-down"> -->
         <v-btn flat>
           <v-avatar>
-            <v-icon>account_circle</v-icon>
+            <v-icon large>account_circle</v-icon>
           </v-avatar>
           {{this.account}}
         </v-btn>
@@ -111,6 +111,7 @@ export default {
       addingVault: false,
       newVault: null,
       nuVaultContract: null,
+      policyEncryptingKey: null,
       ipfs: new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }),
       hash: null,
       vaults: []
@@ -120,9 +121,48 @@ export default {
     chooseVault (vault) {
       this.selectedVault = vault
     },
-    syncIpfs () {
+    async syncIpfs () {
       this.isLoading = true
-      const data = Buffer.from(JSON.stringify(this.vaults))
+
+      // Call out to Enrico
+      const body = JSON.stringify({
+        message: JSON.stringify(this.vaults)
+        // message: 'hello world'
+      })
+      console.log('body', body)
+      const enricoRes = await fetch('http://localhost:5151/encrypt_message', {
+        method: 'POST',
+        body: body
+      })
+        .then((resp) => resp.json())
+      console.log('enrico res', enricoRes)
+
+      // Get Bob's keys
+      const bobRes = await fetch('http://localhost:11151/public_keys').then((resp) => resp.json())
+      console.log('bob res', bobRes)
+
+      const aliceGrantRes = await fetch('http://localhost:8151/grant', {
+        method: 'PUT',
+        body: JSON.stringify({
+          bob_signing_key: bobRes.result.bob_signing_key,
+          bob_encrypting_key: bobRes.result.bob_encrypting_key,
+          m: 1,
+          n: 1,
+          label: this.account,
+          // label: 'the_label',
+          expiration_time: '2019-02-19T12:56:26.976816'
+        })
+      }).then((resp) => resp.json())
+
+      console.log('alice grant res', aliceGrantRes)
+
+      const data = Buffer.from(JSON.stringify({
+        policyEncryptingKey: this.policyEncryptingKey,
+        aliceSigningKey: aliceGrantRes.result.alice_signing_key,
+        enricoSignature: enricoRes.result.signature,
+        vaults: enricoRes.result.message_kit
+      }))
+
       this.ipfs.add(data, {}, async (err, ipfsHash) => {
         if (err) {
           console.error(err)
@@ -138,11 +178,19 @@ export default {
         }
       })
     },
-    addVault () {
+    async addVault () {
       this.vaults.push({
         name: this.newVault,
         items: []
       })
+
+      console.log('here', this.vaults.length)
+      if (this.vaults.length === 1) {
+        const res = await fetch(`http://localhost:8151/derive_policy_pubkey/${this.account}`, { method: 'POST' })
+        // const res = await fetch('http://localhost:8151/derive_policy_pubkey/the_label', { method: 'POST' })
+          .then((resp) => resp.json())
+        this.policyEncryptingKey = res.result.policy_encrypting_key
+      }
     }
   },
   async mounted () {
@@ -193,11 +241,28 @@ export default {
     this.hash = await this.nuVaultContract.methods.getHash().call({ from: this.account })
 
     if (this.hash) {
-      this.ipfs.get(this.hash, (err, files) => {
+      this.ipfs.get(this.hash, async (err, files) => {
         if (err) {
           console.error(err)
         } else {
-          this.vaults = JSON.parse(files[0].content)
+          const json = JSON.parse(files[0].content)
+          console.log('ipfs json', json)
+          this.vaults = json.vaults
+          this.policyEncryptingKey = json.policyEncryptingKey
+
+          const bobRes = await fetch('http://localhost:11151/retrieve', {
+            method: 'POST',
+            body: JSON.stringify({
+              label: this.account,
+              policy_encrypting_key: json.policyEncryptingKey,
+              alice_signing_key: json.aliceSigningKey,
+              datasource_signing_pubkey: json.enricoSignature,
+              message_kit: json.vaults
+            })
+          }).then((resp) => resp.json())
+
+          console.log('bobRes', bobRes)
+          this.vaults = JSON.parse(Buffer.from(bobRes.result.plaintext[0], 'base64').toString('utf-8'))
         }
       })
     }
