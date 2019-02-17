@@ -56,7 +56,7 @@
 
     <v-content>
       <v-container fluid>
-        <router-view :vault="selectedVault"></router-view>
+        <router-view v-on:data-changed="syncIpfs" :vault="selectedVault"></router-view>
       </v-container>
     </v-content>
   </v-app>
@@ -65,11 +65,13 @@
 <script>
 import Web3 from 'Web3'
 
+const IPFS = require('ipfs-api')
+
 // #fc5090 light pink
 // #fb2a78 dark pink
 // #120724 white
 // #25193E purple
-
+// ipfs hash QmXLrUrmmpZPbRcdVYxpw94LCpTKqJ7Bg8tnd2L26pqY7e
 export default {
   name: 'App',
   data () {
@@ -80,83 +82,35 @@ export default {
       selectedVault: null,
       addingVault: false,
       newVault: null,
-      vaults: [{
-        name: 'Personal',
-        items: [{
-          name: 'NuCypher',
-          fields: {
-            username: 'mathewdgardner@gmail.com',
-            password: '123123'
-          }
-        }, {
-          name: 'Portis',
-          fields: {
-            username: 'mathewdgardner@gmail.com',
-            password: '321321'
-          }
-        }, {
-          name: 'ETHDenver',
-          fields: {
-            username: 'mathewdgardner@gmail.com',
-            password: '112233'
-          }
-        }]
-      }, {
-        name: 'Work',
-        items: [{
-          name: 'NuCypher',
-          fields: {
-            username: 'mathewdgardner@gmail.com',
-            password: '123123'
-          }
-        }, {
-          name: 'Portis',
-          fields: {
-            username: 'mathewdgardner@gmail.com',
-            password: '321321'
-          }
-        }, {
-          name: 'ETHDenver',
-          fields: {
-            username: 'mathewdgardner@gmail.com',
-            password: '112233'
-          }
-        }]
-      }, {
-        name: 'ETHDEnver',
-        items: [{
-          name: 'NuCypher',
-          fields: {
-            username: 'mathewdgardner@gmail.com',
-            password: '123123'
-          }
-        }, {
-          name: 'Portis',
-          fields: {
-            username: 'mathewdgardner@gmail.com',
-            password: '321321'
-          }
-        }, {
-          name: 'ETHDenver',
-          fields: {
-            username: 'mathewdgardner@gmail.com',
-            password: '112233'
-          }
-        }]
-      }]
+      ipfs: new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }),
+      hash: 'QmbFrviWQMjnJBdMtMr7FrdkBqHdoUzi6RQYcLS2R8ws6Q',
+      vaults: []
     }
   },
   methods: {
     chooseVault (vault) {
       this.selectedVault = vault
     },
+    syncIpfs () {
+      const data = Buffer.from(JSON.stringify(this.vaults))
+      this.ipfs.add(data, {}, (err, ipfsHash) => {
+        if (err) {
+          console.error(err)
+        } else {
+          console.log('ipfsHash', ipfsHash)
+          this.hash = ipfsHash[0].hash
+          this.addingVault = false
+          this.newVault = null
+        }
+      })
+    },
     addVault () {
       this.vaults.push({
         name: this.newVault,
         fields: []
       })
-      this.addingVault = false
-      this.newVault = null
+
+      this.syncIpfs()
     }
   },
   async mounted () {
@@ -200,6 +154,18 @@ export default {
       default:
         console.info('This is an unknown network.')
     }
+
+    this.ipfs.get(this.hash, (err, files) => {
+      if (err) {
+        console.error(err)
+      } else {
+        // files.forEach((file) => {
+        //   console.log(file.path)
+        //   console.log(file.content.toString('utf8'))
+        // })
+        this.vaults = JSON.parse(files[0].content)
+      }
+    })
   }
 }
 </script>

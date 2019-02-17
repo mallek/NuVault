@@ -54,7 +54,7 @@
             <v-text-field v-model="addFieldKey" placeholder="key"></v-text-field>
             <v-text-field v-model="addFieldValue" placeholder="value"></v-text-field>
           </v-flex>
-          <v-btn color="primary" @click="save">Done</v-btn>
+          <v-btn color="#fc5090" @click="save">Done</v-btn>
         </v-list>
     </v-flex>
   </v-layout>
@@ -82,6 +82,8 @@ export default {
       }
 
       this.editing = false
+
+      this.$emit('data-changed')
     }
   }
 }

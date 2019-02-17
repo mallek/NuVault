@@ -66,6 +66,8 @@ export default {
       })
       this.addingItem = false
       this.newItem = null
+
+      this.$emit('data-changed')
     }
   }
 }
