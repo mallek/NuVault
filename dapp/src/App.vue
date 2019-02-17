@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-toolbar color="#25193E" dark app flat>
+    <v-toolbar color="#25193E" dark app flat clipped-left>
       <v-toolbar-side-icon></v-toolbar-side-icon>
       <v-toolbar-title>NuVault</v-toolbar-title>
 
@@ -20,7 +20,7 @@
       <div class="text-sm-center">Unlock wallet</div>
     </v-alert>
 
-    <v-navigation-drawer app>
+    <v-navigation-drawer app clipped>
       <v-layout row>
         <v-flex xs12>
             <v-list subheader>
