@@ -1,12 +1,26 @@
 {
 	"info": {
-		"_postman_id": "fbb70e57-44ec-4269-afe7-af4b9b6c58ee",
+		"_postman_id": "4f2c785c-e6f9-42c7-b64e-9daae03289d5",
 		"name": "NuCypher",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "http://localhost:8151/derive_policy_pubkey",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "04cdbe20-68cd-479b-81a2-b146d614d426",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"console.log(jsonData.result);",
+							"postman.setEnvironmentVariable(\"policy_encrypting_key\", jsonData.result.policy_encrypting_key);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -19,17 +33,18 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"label\":\"RXRoZGVudmVyMjAxOQ==\"\n}"
+					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:8151/derive_policy_pubkey",
+					"raw": "http://localhost:8151/derive_policy_pubkey/{{label}}",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8151",
 					"path": [
-						"derive_policy_pubkey"
+						"derive_policy_pubkey",
+						"{{label}}"
 					]
 				}
 			},
@@ -37,6 +52,21 @@
 		},
 		{
 			"name": "http://localhost:5151/encrypt_message",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2771b0c4-3755-47cc-ac35-58105453bf46",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"console.log(jsonData.result);",
+							"postman.setEnvironmentVariable(\"enrico_message_kit\", jsonData.result.message_kit);",
+							"postman.setEnvironmentVariable(\"enrico_signature\", jsonData.result.signature)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -109,7 +139,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"bob_signing_key\": \"02a85ab0f42937f78e2eedbc900da352753893301017eaf00432fbe064b8e6b417\",\n    \"bob_encrypting_key\": \"033b55b5f0059ee065a2fe2542863016db3f236c1c7cad88193b41c9c5f1eff355\",\n    \"m\": 1,\n    \"n\": 1,\n    \"label\": \"RXRoZGVudmVyMjAxOQ==\",\n    \"expiration_time\": \"2019-02-19T12:56:26.976816\"\n}\n\n"
+					"raw": "{\n\t\"bob_signing_key\": \"{{bob_signing_key}}\",\n    \"bob_encrypting_key\": \"{{bob_encrypting_key}}\",\n    \"m\": 1,\n    \"n\": 1,\n    \"label\": \"{{label}}\",\n    \"expiration_time\": \"2019-02-19T12:56:26.976816\"\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8151/grant",
@@ -120,6 +150,54 @@
 					"port": "8151",
 					"path": [
 						"grant"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8151/grant Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "435cfc59-27a4-4391-8f1b-ae0ba63c36bc",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"console.log(jsonData.result);",
+							"postman.setEnvironmentVariable(\"bob_encrypting_key\", jsonData.result.bob_encrypting_key);",
+							"postman.setEnvironmentVariable(\"bob_signing_key\", jsonData.result.bob_signing_key);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\n"
+				},
+				"url": {
+					"raw": "http://localhost:11151/public_keys",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "11151",
+					"path": [
+						"public_keys"
 					]
 				}
 			},
